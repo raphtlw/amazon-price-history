@@ -7,10 +7,18 @@
     "start": "node app",
     "dev": "nodemon app"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphtlw/Amazon-Price-History"
+  },
+  "author": "Raphael Tang",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raphtlw/Amazon-Price-History/issues"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "puppeteer": "^2.1.0"
-  }
+  },
+  "homepage": "http://amazon-price-history.herokuapp.com"
 }

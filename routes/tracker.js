@@ -6,7 +6,13 @@ const fs = require('fs');
 const router = express.Router();
 
 const scrapePriceChart = async (url) => {
-  const browser = await puppeteer.launch({headless: true});
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
+  });
   const page = await browser.newPage();
   
   await page.goto('https://camelcamelcamel.com');
