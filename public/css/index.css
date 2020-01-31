@@ -1,0 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  overflow: hidden;
+}
+#background {
+  height: 100vh;
+  background: rgb(187, 134, 33);
+}
+#main {
+  position: relative;
+  top: 30vh;
+  left: 30vh;
+}
+#header {
+  font-family: Arial, Helvetica, sans-serif;
+}
+#header h1 {
+  font-size: 4rem;
+  color: white;
+}
+#header h2 {
+  font-weight: 500;
+  font-size: 1rem;
+  color: white;
+}
+#url-form {
+  background: rgb(255, 211, 125);
+  margin-top: 2rem;
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.089);
+  width: fit-content;
+}
+#url-input {
+  border: none;
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+  font-size: 1.2rem;
+  width: 65vw;
+  color: rgba(0, 0, 0, 0.788);
+}
+#url-input::placeholder {
+  color: rgba(0, 0, 0, 0.562);
+}
