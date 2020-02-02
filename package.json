@@ -17,8 +17,10 @@
     "url": "https://github.com/raphtlw/Amazon-Price-History/issues"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
-    "puppeteer": "^2.1.0"
+    "image-downloader": "^3.5.0",
+    "request": "^2.88.0"
   },
   "homepage": "http://amazon-price-history.herokuapp.com"
 }

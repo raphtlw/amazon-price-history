@@ -1,54 +1,53 @@
 const express = require('express');
+const request = require('request');
+const cheerio = require('cheerio');
+const download = require('image-downloader');
 const path = require('path');
-const puppeteer = require('puppeteer');
-const fs = require('fs');
 
 const router = express.Router();
 
-const scrapePriceChart = async (url) => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
-  const page = await browser.newPage();
-  
-  await page.goto('https://camelcamelcamel.com');
-  await page.type('.input-group-field', url);
-  await page.keyboard.press('Enter');
-  
-  await page.waitForXPath('//*[@id="summary_chart"]');
-  
-  const [el] = await page.$x('//*[@id="summary_chart"]');
-  const src = await el.getProperty('src');
-  const srcTxt = await src.jsonValue();
-
-  console.log(srcTxt);
-
-  const viewSource = await page.goto(srcTxt);
-  fs.writeFile('public/images/chart.png', await viewSource.buffer(), err => {if (err) throw err});
-
-  browser.close();
-
-  console.log('Chart was saved!');
-}
-
 router.get('/', (req, res) => {
-  (async () => {
-    const url = req.query.url;
-    console.log(url);
+  // Parsing the URL in order for it to be used by cheerio
+  // Converts the URL into a camelcamelcamel.com link
+  let url = 'https://www.amazon.com/Acer-SB220Q-Ultra-Thin-Frame-Monitor/dp/B07CVL2D2S?pf_rd_p=538b030e-3f40-5f94-a1a5-376bc59a2030&pf_rd_r=NXTDHXE5Q8E20RNXNJ0E&pd_rd_wg=hEiSA&ref_=pd_gw_ri&pd_rd_w=rCNNI&pd_rd_r=462cf11c-3549-4742-94a3-141ea2d840a9';
+  url = url.split('/');
 
-    await scrapePriceChart(url).catch(err => {
-      if (err) {
-        console.log(err.message);
-        res.sendFile(path.join(__dirname, '..', 'public', 'error.html'));
-      }
-    });
+  const name = url[3];
+  const id = url[5].split('?')[0];
 
-    res.sendFile(path.join(__dirname, '..', 'public', 'result.html'));
-  })().catch(err => console.log(err.message));
+  // Final URL
+  url = `https://camelcamelcamel.com/${name}/product/${id}`;
+
+  console.log(`URL: ${url}\n`);
+  console.log(`Item name: ${name}`);
+  console.log(`Item ID: ${id}\n`);
+  console.log(`Final URL: ${url}`);
+
+  request(url, (err, res, html) => {
+    if (!err && res.statusCode == 200) {
+      const $ = cheerio.load(html);
+      
+      const itemName = $('.show-for-medium h2 a');
+      const itemPrice = $('.stat > .green');
+      const itemPriceChartUrl = `https://charts.camelcamelcamel.com/us/${id}/amazon.png`;
+
+      console.log(itemName.html());
+      console.log(itemPrice.html());
+      console.log(itemPriceChartUrl);
+
+      (() => {
+        const options = {
+          url: itemPriceChartUrl,
+          dest: path.join(__dirname, '..', 'public', 'images', 'chart.png'),
+        }
+        download.image(options).then(({filename, image}) => {
+          console.log(`Downloaded price chart to ${filename}`);
+        }).catch(err => console.log(err));
+      })();
+    }
+  });
+
+  res.sendFile(path.join(__dirname, '..', 'public', 'result.html'));
 });
 
 module.exports = router;
