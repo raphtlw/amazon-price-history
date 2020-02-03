@@ -6,10 +6,10 @@ const path = require('path');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // Parsing the URL in order for it to be used by cheerio
   // Converts the URL into a camelcamelcamel.com link
-  let url = 'https://www.amazon.com/Acer-SB220Q-Ultra-Thin-Frame-Monitor/dp/B07CVL2D2S?pf_rd_p=538b030e-3f40-5f94-a1a5-376bc59a2030&pf_rd_r=NXTDHXE5Q8E20RNXNJ0E&pd_rd_wg=hEiSA&ref_=pd_gw_ri&pd_rd_w=rCNNI&pd_rd_r=462cf11c-3549-4742-94a3-141ea2d840a9';
+  let url = req.query.url;
   url = url.split('/');
 
   const name = url[3];
@@ -23,13 +23,13 @@ router.get('/', (req, res) => {
   console.log(`Item ID: ${id}\n`);
   console.log(`Final URL: ${url}`);
 
-  request(url, (err, res, html) => {
-    if (!err && res.statusCode == 200) {
+  request(url, (error, response, html) => {
+    if (!error && response.statusCode == 200) {
       const $ = cheerio.load(html);
       
       const itemName = $('.show-for-medium h2 a');
       const itemPrice = $('.stat > .green');
-      const itemPriceChartUrl = `https://charts.camelcamelcamel.com/us/${id}/amazon.png`;
+      const itemPriceChartUrl = `https://charts.camelcamelcamel.com/us/${id}/amazon.png?force=1&zero=0&w=854&h=512&desired=false&legend=1&ilt=1&tp=all&fo=0&lang=en`;
 
       console.log(itemName.html());
       console.log(itemPrice.html());
@@ -42,12 +42,11 @@ router.get('/', (req, res) => {
         }
         download.image(options).then(({filename, image}) => {
           console.log(`Downloaded price chart to ${filename}`);
+          res.sendFile(path.join(__dirname, '..', 'public', 'result.html'));
         }).catch(err => console.log(err));
       })();
     }
   });
-
-  res.sendFile(path.join(__dirname, '..', 'public', 'result.html'));
 });
 
 module.exports = router;
