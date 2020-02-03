@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
   const tempDir = path.join(process.cwd(), 'public', 'temp');
 
   if (!fs.existsSync(tempDir)) {
