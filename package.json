@@ -2,10 +2,10 @@
   "name": "amazon-price-tracker",
   "version": "1.0.0",
   "description": "Simple price tracker for amazon.",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app",
-    "dev": "nodemon app"
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "repository": {
     "type": "git",
