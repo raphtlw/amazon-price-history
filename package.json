@@ -1,11 +1,12 @@
 {
-  "name": "amazon-price-tracker",
+  "name": "amazon-price-history",
   "version": "1.0.0",
   "description": "Simple price tracker for amazon.",
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "test": "nodemon test/index.js"
   },
   "repository": {
     "type": "git",
